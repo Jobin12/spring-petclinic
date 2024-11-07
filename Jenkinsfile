@@ -50,4 +50,13 @@ pipeline {
       }
     }
   }
+
+  post {
+    always {
+      script {
+        def log = currentBuild.rawBuild.getLog(-1).join("\n")
+        writeFile file: 'pipeline.log', text: log
+      }
+    }
+  }
 }
