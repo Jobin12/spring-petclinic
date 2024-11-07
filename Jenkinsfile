@@ -27,7 +27,7 @@ pipeline {
           script {
             sh """
               export SONAR_TOKEN=${env.SONAR_TOKEN}
-              mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic-testing_petclinic
+              ./mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic-testing_petclinic
             """
           }
         } 
