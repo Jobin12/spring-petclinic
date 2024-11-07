@@ -33,5 +33,21 @@ pipeline {
         } 
       }
     }
+
+    stage('Build') {
+      steps {
+        script {
+          sh './mvnw package'
+        }
+      }
+    }
+
+    stage('Containerization') {
+      steps {
+        script {
+          sh 'docker build -t petclinic:dev .'
+        }
+      }
+    }
   }
 }
