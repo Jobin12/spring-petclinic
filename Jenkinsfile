@@ -57,7 +57,7 @@ pipeline {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE).join("\n")
         writeFile file: 'pipeline.log', text: log
 
-        withCredentials([usernamePassword(credentialsId: 'mycreds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+        withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
           sh """
             export AWS_ACCESS_KEY = ${env.AWS_ACCESS_KEY_ID}
             export AWS_SECRET_KEY = ${env.AWS_SECRET_ACCESS_KEY}
