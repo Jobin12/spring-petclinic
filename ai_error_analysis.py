@@ -23,6 +23,6 @@ response = message.content[0].text
 output = re.sub(r"\n\n+", "\n", response)
 
 analysis_file = open('ai_analysis.html', 'a')
-analysis_file.write("<h1>AI Error Analysis<h1><br>")
+analysis_file.write("<h1>AI Error Analysis</h1><br>")
 analysis_file.write(output)
 analysis_file.close() 
