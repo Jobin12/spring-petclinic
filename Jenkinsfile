@@ -52,7 +52,7 @@ pipeline {
   }
 
   post {
-    always {
+    failure {
       script {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE).join("\n")
         writeFile file: 'pipeline.log', text: log
@@ -63,8 +63,19 @@ pipeline {
             export AWS_SECRET_KEY=${env.AWS_SECRET_ACCESS_KEY}
 
             python ai_error_analysis.py
+            mkdir error_analysis
+            mv ai_analysis.html error_analysis
           """
         }
+
+
+        publishHTML (target : [allowMissing: false,
+          alwaysLinkToLastBuild: true,
+          keepAll: true,
+          reportDir: 'error_analysis',
+          reportFiles: 'ai_analysis.html',
+          reportName: 'AI Error Analysis',
+          reportTitles: 'AI Error Analysis'])
       }
     }
   }
