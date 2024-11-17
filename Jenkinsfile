@@ -63,7 +63,8 @@ pipeline {
             export AWS_SECRET_KEY=${env.AWS_SECRET_ACCESS_KEY}
 
             python ai_error_analysis.py
-            mkdir error_analysis
+            mkdir -p error_analysis
+            rm -f error_analysis/*
             mv ai_analysis.html error_analysis
           """
         }
