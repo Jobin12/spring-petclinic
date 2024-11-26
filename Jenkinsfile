@@ -89,8 +89,9 @@ pipeline {
               stageFound = false
           }
         }
-
-        writeFile file: 'error.log', text: stageLog
+        
+        def stageLogString = stageLog.join("\n")
+        writeFile file: 'error.log', text: stageLogString
 
         withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
           sh """
