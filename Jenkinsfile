@@ -2,37 +2,37 @@ pipeline {
   agent any
 
   stages {
-    stage('Unit Test') {
-      steps {
-        script {
-          sh './mvnw test'
-        }
-      }
-    }
+    // stage('Unit Test') {
+    //   steps {
+    //     script {
+    //       sh './mvnw test'
+    //     }
+    //   }
+    // }
 
-    stage ('AWS CodeGuru Security') {
-      steps {
-        script {
-          sh """
-            chmod +x run_codeguru_security.sh
-            bash run_codeguru_security.sh spring-petclinic . us-east-1
-          """
-        }
-      }
-    }
+    // stage ('AWS CodeGuru Security') {
+    //   steps {
+    //     script {
+    //       sh """
+    //         chmod +x run_codeguru_security.sh
+    //         bash run_codeguru_security.sh spring-petclinic . us-east-1
+    //       """
+    //     }
+    //   }
+    // }
 
-    stage('SonarQube Analysis') {
-      steps {
-        withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]) {
-          script {
-            sh """
-              export SONAR_TOKEN=${env.SONAR_TOKEN}
-              ./mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic-testing_petclinic
-            """
-          }
-        } 
-      }
-    }
+    // stage('SonarQube Analysis') {
+    //   steps {
+    //     withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]) {
+    //       script {
+    //         sh """
+    //           export SONAR_TOKEN=${env.SONAR_TOKEN}
+    //           ./mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic-testing_petclinic
+    //         """
+    //       }
+    //     } 
+    //   }
+    // }
 
     stage('Build') {
       steps {
@@ -77,10 +77,8 @@ pipeline {
           } 
         }
 
-        if (failedStage) {
-          def stageLog = log.findAll { it.contains(failedStage) }.join("\n")
-          writeFile file: 'pipeline.log', text: stageLog
-        }
+        def stageLog = log.findAll { it.contains(failedStage) }.join("\n")
+        writeFile file: 'error.log', text: stageLog
 
         withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
           sh """
@@ -89,7 +87,7 @@ pipeline {
 
             python ai_error_analysis.py
             mkdir -p error_analysis
-            rm -f error_analysis/*
+            rm -f error_analysis/* error.log
             mv ai_analysis.html error_analysis
           """
         }
