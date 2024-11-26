@@ -69,6 +69,8 @@ pipeline {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE).join("\n")
         def failedStage = null
 
+        echo log
+
         currentBuild.rawBuild.allActions.findAll { it instanceof org.jenkinsci.plugins.workflow.actions.FlowNodeAction }.each { action -> 
           action.failedNodeActions.each { flowNode -> 
             if (flowNode.error) { 
