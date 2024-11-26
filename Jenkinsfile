@@ -1,42 +1,48 @@
+def FAILED_STAGE
+
 pipeline {
   agent any
 
   stages {
-    // stage('Unit Test') {
-    //   steps {
-    //     script {
-    //       sh './mvnw test'
-    //     }
-    //   }
-    // }
+    stage('Unit Test') {
+      steps {
+        script {
+          FAILED_STAGE=env.STAGE_NAME
+          sh './mvnw test'
+        }
+      }
+    }
 
-    // stage ('AWS CodeGuru Security') {
-    //   steps {
-    //     script {
-    //       sh """
-    //         chmod +x run_codeguru_security.sh
-    //         bash run_codeguru_security.sh spring-petclinic . us-east-1
-    //       """
-    //     }
-    //   }
-    // }
+    stage ('AWS CodeGuru Security') {
+      steps {
+        script {
+          FAILED_STAGE=env.STAGE_NAME
+          sh """
+            chmod +x run_codeguru_security.sh
+            bash run_codeguru_security.sh spring-petclinic . us-east-1
+          """
+        }
+      }
+    }
 
-    // stage('SonarQube Analysis') {
-    //   steps {
-    //     withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]) {
-    //       script {
-    //         sh """
-    //           export SONAR_TOKEN=${env.SONAR_TOKEN}
-    //           ./mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic-testing_petclinic
-    //         """
-    //       }
-    //     } 
-    //   }
-    // }
+    stage('SonarQube Analysis') {
+      steps {
+        withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]) {
+          script {
+            FAILED_STAGE=env.STAGE_NAME
+            sh """
+              export SONAR_TOKEN=${env.SONAR_TOKEN}
+              ./mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-petclinic-testing_petclinic
+            """
+          }
+        } 
+      }
+    }
 
     stage('Build') {
       steps {
         script {
+          FAILED_STAGE=env.STAGE_NAME
           sh './mvnw package'
         }
       }
@@ -45,6 +51,7 @@ pipeline {
     stage('Containerization') {
       steps {
         script {
+          FAILED_STAGE=env.STAGE_NAME
           sh """
             docker build -t petclinic:${env.BUILD_NUMBER} .
             docker push jobin589/spring-petclinic:${env.BUILD_NUMBER}
@@ -56,6 +63,7 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
+          FAILED_STAGE=env.STAGE_NAME
           sh "kubectl run spring-petclinic --image=jobin589/spring-petclinic:${env.BUILD_NUMBER}"
         }
       }
@@ -67,19 +75,20 @@ pipeline {
     failure {
       script {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE).join("\n")
-        def failedStage = null
+        def stageLog = []
 
-        echo log
-
-        currentBuild.rawBuild.allActions.findAll { it instanceof org.jenkinsci.plugins.workflow.actions.FlowNodeAction }.each { action -> 
-          action.failedNodeActions.each { flowNode -> 
-            if (flowNode.error) { 
-              failedStage = flowNode.displayName 
-            } 
-          } 
+        log.each { line ->
+          if (line.contains("[Pipeline] { (" + FAILED_STAGE + ")")) {
+              stageFound = true
+          }
+          if (stageFound) {
+              stageLog.add(line)
+          }
+          if (stageFound && line.contains("[Pipeline] }")) {
+              stageFound = false
+          }
         }
 
-        def stageLog = log.findAll { it.contains(failedStage) }.join("\n")
         writeFile file: 'error.log', text: stageLog
 
         withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
