@@ -8,7 +8,7 @@ client = AnthropicBedrock(
     aws_region='us-east-1'
 )
 
-log_file = open("pipeline.log", "r")
+log_file = open("error.log", "r")
 log = log_file.read()
 log_file.close()
 
