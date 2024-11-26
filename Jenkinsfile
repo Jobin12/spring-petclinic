@@ -45,17 +45,34 @@ pipeline {
     stage('Containerization') {
       steps {
         script {
-          sh 'docker build -t petclinic:dev .'
+          sh """
+            docker build -t petclinic:${env.BUILD_NUMBER} .
+            docker push jobin589/spring-petclinic:${env.BUILD_NUMBER}
+          """
         }
       }
     }
+
+    stage('Deploy') {
+      steps {
+        script {
+          sh "kubectl run spring-petclinic --image=jobin589/spring-petclinic:${env.BUILD_NUMBER}"
+        }
+      }
+    }
+
   }
 
   post {
     failure {
       script {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE).join("\n")
-        writeFile file: 'pipeline.log', text: log
+        def failedStage = null
+
+        currentBuild.rawBuild.allActions.findAll { it instanceof org.jenkinsci.plugins.workflow.actions.FlowNodeAction }.each { action -> action.failedNodeActions.each { flowNode -> if (flowNode.error) { failedStage = flowNode.displayName } }
+        def stageLog = log.findAll { it.contains(failedStage) }.join("\n")
+
+        writeFile file: 'pipeline.log', text: stageLog
 
         withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
           sh """
