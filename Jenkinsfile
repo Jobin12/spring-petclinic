@@ -76,6 +76,7 @@ pipeline {
       script {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE).join("\n")
         def stageLog = []
+        def stageFound = false
 
         log.each { line ->
           if (line.contains("[Pipeline] { (" + FAILED_STAGE + ")")) {
