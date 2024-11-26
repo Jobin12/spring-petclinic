@@ -82,6 +82,7 @@ pipeline {
         log.each { line ->
           if (line.contains("[Pipeline] { (" + FAILED_STAGE + ")")) {
               stageFound = true
+              echo stageFound
           }
           if (stageFound) {
               stageLog.add(line)
