@@ -74,15 +74,13 @@ pipeline {
   post {
     failure {
       script {
-        def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE).join("\n")
+        def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE)
         def stageLog = []
         def stageFound = false
-        echo FAILED_STAGE
 
         log.each { line ->
           if (line.contains("[Pipeline] { (" + FAILED_STAGE + ")")) {
               stageFound = true
-              echo stageFound
           }
           if (stageFound) {
               stageLog.add(line)
@@ -93,7 +91,6 @@ pipeline {
         }
         
         def stageLogString = stageLog.join("\n")
-        writeFile file: 'pipeline.log', text: log
         writeFile file: 'error.log', text: stageLogString
 
         withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
@@ -104,7 +101,7 @@ pipeline {
             cat error.log
             python ai_error_analysis.py
             mkdir -p error_analysis
-            rm -f error_analysis/*
+            rm -f error_analysis/* error.log
             mv ai_analysis.html error_analysis
           """
         }
