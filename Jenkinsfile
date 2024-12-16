@@ -54,7 +54,7 @@ pipeline {
           FAILED_STAGE=env.STAGE_NAME
           sh """
             docker build -t jobin589/spring-petclinic:${env.BUILD_NUMBER} .
-            docker push jobin589/spring-petclinic:${env.BUILD_NUMBER}
+            docker push myimage
           """
         }
       }
