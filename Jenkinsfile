@@ -92,6 +92,8 @@ pipeline {
         
         def stageLogString = stageLog.join("\n")
         writeFile file: 'error.log', text: stageLogString
+        def logString = logString.join("\n")
+        writeFile file: 'pipeline.log', text: logString
 
         withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
           sh """
