@@ -95,26 +95,26 @@ pipeline {
         def logString = log.join("\n")
         writeFile file: 'pipeline.log', text: logString
 
-        withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-          sh """
-            export AWS_ACCESS_KEY=${env.AWS_ACCESS_KEY_ID}
-            export AWS_SECRET_KEY=${env.AWS_SECRET_ACCESS_KEY}
+        // withCredentials([usernamePassword(credentialsId: 'aws_creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+        //   sh """
+        //     export AWS_ACCESS_KEY=${env.AWS_ACCESS_KEY_ID}
+        //     export AWS_SECRET_KEY=${env.AWS_SECRET_ACCESS_KEY}
 
-            cat error.log
-            python ai_error_analysis.py
-            mkdir -p error_analysis
-            rm -f error_analysis/* error.log
-            mv ai_analysis.html error_analysis
-          """
-        }
+        //     cat error.log
+        //     python ai_error_analysis.py
+        //     mkdir -p error_analysis
+        //     rm -f error_analysis/* error.log
+        //     mv ai_analysis.html error_analysis
+        //   """
+        // }
 
-        publishHTML (target : [allowMissing: false,
-          alwaysLinkToLastBuild: true,
-          keepAll: true,
-          reportDir: 'error_analysis',
-          reportFiles: 'ai_analysis.html',
-          reportName: 'AI Error Analysis',
-          reportTitles: 'AI Error Analysis'])
+        // publishHTML (target : [allowMissing: false,
+        //   alwaysLinkToLastBuild: true,
+        //   keepAll: true,
+        //   reportDir: 'error_analysis',
+        //   reportFiles: 'ai_analysis.html',
+        //   reportName: 'AI Error Analysis',
+        //   reportTitles: 'AI Error Analysis'])
       }
     }
   }

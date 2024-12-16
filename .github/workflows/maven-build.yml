@@ -27,4 +27,6 @@ jobs:
       - name: Build with Maven Wrapper
         run: ./mvnw package
       - name: Build Docker image
-        run: docker ps
+        run: docker build -t jobin589/spring-petclinic:$GITHUB_RUN_ID
+      - name: Push Docker Image
+        run: docker push myimage
