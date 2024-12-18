@@ -72,6 +72,15 @@ pipeline {
   }
 
   post {
+    always {
+      logParser ([
+        projectRulePath: '/tmp/error_format',
+        parsingRulesPath: '',
+        showGraphs: true, 
+        unstableOnWarning: true, 
+        useProjectRule: true
+      ])
+    }
     failure {
       // script {
       //   def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE)
