@@ -4,14 +4,14 @@ pipeline {
   agent any
 
   stages {
-    // stage('Unit Test') {
-    //   steps {
-    //     script {
-    //       FAILED_STAGE=env.STAGE_NAME
-    //       sh './mvnw test'
-    //     }
-    //   }
-    // }
+    stage('Unit Test') {
+      steps {
+        script {
+          FAILED_STAGE=env.STAGE_NAME
+          sh './mvnw test'
+        }
+      }
+    }
 
     // stage ('AWS CodeGuru Security') {
     //   steps {
