@@ -38,11 +38,11 @@ pipeline {
         def logString = log.join("\n")
         writeFile file: "Build-${env.BUILD_NUMBER}.log", text: logString
 
-        def logFile = new File("${env.WORKSPACE}/Build-${env.BUILD_NUMBER}.log").bytes
+        def logFile = new File("${env.WORKSPACE}/Build-${env.BUILD_NUMBER}.log").text
 
         def response = httpRequest(
           httpMode: 'PUT',
-          contentType: 'APPLICATION_OCTETSTREAM',
+          contentType: 'TEXT_PLAIN',
           url: "https://o7jlq66p7i.execute-api.us-east-1.amazonaws.com/dev/jenkins-logs-test-bucket/Build-${env.BUILD_NUMBER}.log",
           requestBody: logFile
         )
