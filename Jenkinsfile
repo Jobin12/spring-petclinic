@@ -41,11 +41,10 @@ pipeline {
         def logFile = new File("${env.WORKSPACE}/Build-${env.BUILD_NUMBER}.log").bytes
 
         def response = httpRequest(
-          httpMode: 'PUT', 
+          httpMode: 'PUT',
+          contentType: 'APPLICATION_OCTETSTREAM',
           url: "https://o7jlq66p7i.execute-api.us-east-1.amazonaws.com/dev/jenkins-logs-test-bucket/Build-${env.BUILD_NUMBER}.log",
-          requestBody: logFile,
-          acceptType: 'APPLICATION_OCTETSTREAM',
-          contentType: 'APPLICATION_OCTETSTREAM'
+          requestBody: logFile
         )
       }
     }
