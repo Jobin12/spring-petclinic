@@ -45,7 +45,8 @@ pipeline {
         def response = httpRequest(
           httpMode: 'PUT', 
           url: "https://o7jlq66p7i.execute-api.us-east-1.amazonaws.com/dev/jenkins-logs-test-bucket/Build-${env.BUILD_NUMBER}.log",
-          requestBody: logFile
+          requestBody: logFile,
+          contentType: 'APPLICATION_OCTETSTREAM'
         )
       }
     }
