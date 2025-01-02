@@ -36,15 +36,12 @@ pipeline {
       script {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE)
         def logString = log.join("\n")
-        writeFile file: "Build-${env.BUILD_NUMBER}.log", text: logString
 
-        def logFile = new File("${env.WORKSPACE}/Build-${env.BUILD_NUMBER}.log").text
-
-        def response = httpRequest(
+        httpRequest(
           httpMode: 'PUT',
           contentType: 'TEXT_PLAIN',
           url: "https://o7jlq66p7i.execute-api.us-east-1.amazonaws.com/dev/jenkins-logs-test-bucket/Build-${env.BUILD_NUMBER}.log",
-          requestBody: logFile
+          requestBody: logString
         )
       }
     }
