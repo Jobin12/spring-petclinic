@@ -40,7 +40,7 @@ pipeline {
         def logString = log.join("\n")
         writeFile file: "Build-${env.BUILD_NUMBER}.log", text: logString
 
-        def logFile = new File("${env.WORKSPACE}/Build-${env.BUILD_NUMBER}.log").bytes
+        def logFile = new File("${env.WORKSPACE}/Build-${env.BUILD_NUMBER}.log")
 
         def response = httpRequest(
           httpMode: 'PUT', 
