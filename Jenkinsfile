@@ -5,7 +5,7 @@ pipeline {
     stage('Unit Test') {
       steps {
         script {
-          FAILED_STAGE=env.STAGE_NAME
+          sh 'fail here'
           sh './mvnw test'
         }
       }
@@ -14,7 +14,6 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          FAILED_STAGE=env.STAGE_NAME
           sh './mvnw clean package'
         }
       }
@@ -23,7 +22,6 @@ pipeline {
     stage('Containerization') {
       steps {
         script {
-          FAILED_STAGE=env.STAGE_NAME
           sh """
             docker build -t jobin589/spring-petclinic:${env.BUILD_NUMBER} .
             docker push myimage
