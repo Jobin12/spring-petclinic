@@ -42,7 +42,7 @@ pipeline {
           httpMode: 'POST',
           contentType: 'APPLICATION_FORM_DATA',
           url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-          multipartName: 'pipeline.log',
+          multipartName: 'file',
           uploadFile: 'pipeline.log'
         )
 
