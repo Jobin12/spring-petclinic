@@ -39,12 +39,13 @@ pipeline {
 
         def response = httpRequest(
           httpMode: 'POST',
-          contentType: 'PLAIN_TEXT',
+          contentType: 'APPLICATION_JSON',
           url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-          requestBody: logString
+          requestBody: '{"text": "hello world"}'
         )
 
-        writeFile file: 'pipeline.log', text: response
+        // writeFile file: 'pipeline.log', text: response
+        echo "Response: ${response.content}"
       }
     }
   }
