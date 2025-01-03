@@ -40,11 +40,10 @@ pipeline {
 
         def response = httpRequest(
           httpMode: 'POST',
-          acceptType: 'APPLICATION_JSON',
-          contentType: 'APPLICATION_OCTETSTREAM',
-          url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-          multipartName: 'file',
-          uploadFile: './pipeline.log'
+          formData: [
+            [contentType: 'application/json', name: 'model', body: '{"foo": "bar"}'],
+            [contentType: 'text/plain', name: 'file', fileName: 'pipeline.log',
+            uploadFile: 'pipeline.log']]
         )
 
         writeFile file: 'response.log', text: response.content
