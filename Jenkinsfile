@@ -38,15 +38,18 @@ pipeline {
         def logString = log.join("\n")
         writeFile file: 'pipeline.log', text: logString
 
-        def response = httpRequest(
-          httpMode: 'POST',
-          formData: [
-            [contentType: 'application/json', name: 'model', body: '{"foo": "bar"}'],
-            [contentType: 'text/plain', name: 'file', fileName: 'pipeline.log',
-            uploadFile: 'pipeline.log']]
-        )
+        // def response = httpRequest(
+        //   httpMode: 'POST',
+        //   acceptType: 'APPLICATION_JSON',
+        //   contentType: 'APPLICATION_OCTETSTREAM',
+        //   url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
+        //   multipartName: 'file',
+        //   uploadFile: './pipeline.log'
+        // )
 
-        writeFile file: 'response.log', text: response.content
+        sh 'curl -X POST -H "Content-Type: multipart/form-data" -F "file=@jenkins.log" https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log'
+
+        // writeFile file: 'response.log', text: response.content
       }
     }
   }
