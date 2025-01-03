@@ -5,7 +5,7 @@ pipeline {
     stage('Unit Test') {
       steps {
         script {
-          // sh 'fail here'
+          sh 'fail here'
           sh './mvnw test'
         }
       }
@@ -38,18 +38,15 @@ pipeline {
         def logString = log.join("\n")
         writeFile file: 'pipeline.log', text: logString
 
-        // def response = httpRequest(
-        //   httpMode: 'POST',
-        //   acceptType: 'APPLICATION_JSON',
-        //   contentType: 'APPLICATION_OCTETSTREAM',
-        //   url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-        //   multipartName: 'file',
-        //   uploadFile: './pipeline.log'
-        // )
+        def response = httpRequest(
+          httpMode: 'POST',
+          url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
+          multipartName: 'file',
+          uploadFile: 'pipeline.log'
+        )
+        writeFile file: 'response.log', text: response.content
 
-        sh "curl -X POST -H \"Content-Type: multipart/form-data\" -F \"file=@${env.WORKSPACE}/pipeline.log\" https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log"
-
-        // writeFile file: 'response.log', text: response.content
+        // sh "curl -X POST -H \"Content-Type: multipart/form-data\" -F \"file=@${env.WORKSPACE}/pipeline.log\" https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log"
       }
     }
   }
