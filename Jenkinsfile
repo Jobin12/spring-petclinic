@@ -41,7 +41,7 @@ pipeline {
           httpMode: 'POST',
           contentType: 'APPLICATION_JSON',
           url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-          requestBody: "{\"text\": \"${logString}\"}"
+          requestBody: "{\"text\": \"hello\"}"
         )
 
         writeFile file: 'pipeline.log', text: response.content
