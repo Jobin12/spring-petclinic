@@ -47,7 +47,7 @@ pipeline {
         //   uploadFile: './pipeline.log'
         // )
 
-        sh 'curl -X POST -H "Content-Type: multipart/form-data" -F "file=@jenkins.log" https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log'
+        sh "curl -X POST -H \"Content-Type: multipart/form-data\" -F \"file=@${env.WORKSPACE}jenkins.log\" https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log"
 
         // writeFile file: 'response.log', text: response.content
       }
