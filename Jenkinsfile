@@ -44,7 +44,7 @@ pipeline {
           contentType: 'APPLICATION_OCTETSTREAM',
           url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
           multipartName: 'file',
-          uploadFile: 'pipeline.log'
+          uploadFile: './pipeline.log'
         )
 
         writeFile file: 'response.log', text: response.content
