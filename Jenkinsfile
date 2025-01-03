@@ -36,15 +36,16 @@ pipeline {
       script {
         def log = currentBuild.rawBuild.getLog(Integer.MAX_VALUE)
         def logString = log.join("\n")
+        writeFile file: 'pipeline.log', text: logString
 
         def response = httpRequest(
           httpMode: 'POST',
-          contentType: 'APPLICATION_JSON',
+          contentType: 'APPLICATION_FORM_DATA',
           url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-          requestBody: "{\"text\": \"hello\"}"
+          uploadFile: 'pipeline.log'
         )
 
-        writeFile file: 'pipeline.log', text: response.content
+        writeFile file: 'response.log', text: response.content
       }
     }
   }
