@@ -5,6 +5,7 @@ pipeline {
     stage('Unit Test') {
       steps {
         script {
+          sh 'fail'
           sh './mvnw test'
         }
       }
@@ -44,7 +45,8 @@ pipeline {
           multipartName: 'file',
           uploadFile: 'pipeline.log'
         )
-        writeFile file: 'response.log', text: response.content
+        
+        writeFile file: 'response.log', text: response.content.replace('\\n', '\n')
 
         // sh "curl -X POST -H \"Content-Type: multipart/form-data\" -F \"file=@${env.WORKSPACE}/pipeline.log\" https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log"
       }
