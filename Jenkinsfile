@@ -41,11 +41,10 @@ pipeline {
           httpMode: 'POST',
           contentType: 'APPLICATION_JSON',
           url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-          requestBody: "{\"text\": \"hello world\"}"
+          requestBody: "{\"text\": \"${logString}\"}"
         )
 
-        // writeFile file: 'pipeline.log', text: response
-        echo "Response: ${response.content}"
+        writeFile file: 'pipeline.log', text: response.content
       }
     }
   }
