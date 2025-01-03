@@ -40,7 +40,8 @@ pipeline {
 
         def response = httpRequest(
           httpMode: 'POST',
-          contentType: 'APPLICATION_FORM_DATA',
+          acceptType: 'APPLICATION_JSON',
+          contentType: 'APPLICATION_OCTETSTREAM',
           url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
           multipartName: 'file',
           uploadFile: 'pipeline.log'
