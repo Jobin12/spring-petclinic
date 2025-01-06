@@ -5,6 +5,7 @@ pipeline {
     stage('Unit Test') {
       steps {
         script {
+          sh 'fail'
           sh './mvnw test'
         }
       }
