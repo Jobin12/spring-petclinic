@@ -50,7 +50,7 @@ pipeline {
 
         httpRequest(
           httpMode: 'POST',
-          url: "https://et41hnf02d.execute-api.us-east-1.amazonaws.com/upload-log",
+          url: "https://7f7tgm8cih.execute-api.us-east-1.amazonaws.com/dev/upload-log",
           contentType: 'APPLICATION_FORM_DATA',
           multipartName: 'file',
           uploadFile: 'pipeline.log'
