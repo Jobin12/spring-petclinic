@@ -47,6 +47,7 @@ pipeline {
         )
 
         echo response.content
+      }
     }
   }
 }
