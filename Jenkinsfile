@@ -38,17 +38,7 @@ pipeline {
         def logString = log.join("\n")
         writeFile file: 'pipeline.log', text: logString
 
-        // def response = httpRequest(
-        //   httpMode: 'POST',
-        //   url: "https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log",
-        //   contentType: 'APPLICATION_FORM_DATA',
-        //   multipartName: 'file',
-        //   uploadFile: 'pipeline.log'
-        // )
-        
-        // writeFile file: 'response.log', text: response.content.replace('\\n', '\n')
-
-        httpRequest(
+        def response = httpRequest(
           httpMode: 'POST',
           url: "https://7f7tgm8cih.execute-api.us-east-1.amazonaws.com/dev/upload-log",
           contentType: 'APPLICATION_FORM_DATA',
@@ -56,8 +46,7 @@ pipeline {
           uploadFile: 'pipeline.log'
         )
 
-        // sh "curl -X POST -H \"Content-Type: multipart/form-data\" -F \"file=@${env.WORKSPACE}/pipeline.log\" https://7lth4i7d97.execute-api.us-east-1.amazonaws.com/dev/upload-log"
-      }
+        echo response.content
     }
   }
 }
