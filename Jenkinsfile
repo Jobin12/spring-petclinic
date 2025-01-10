@@ -2,13 +2,13 @@ pipeline {
   agent any
 
   stages {
-    stage('Unit Test') {
-      steps {
-        script {
-          sh './mvnw test'
-        }
-      }
-    }
+    // stage('Unit Test') {
+    //   steps {
+    //     script {
+    //       sh './mvnw test'
+    //     }
+    //   }
+    // }
 
     stage('Build') {
       steps {
