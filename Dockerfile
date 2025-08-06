@@ -3,7 +3,7 @@ FROM maven:3.8.7-openjdk-18-slim AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn -q clean package -DskipTests
 
 # === Stage 2: Runtime ===
 FROM openjdk:18-jdk-slim
